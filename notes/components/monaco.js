@@ -1,5 +1,3 @@
-import * as monaco from "monaco-editor";
-
 self.MonacoEnvironment = {
     getWorkerUrl: function (moduleId, label) {
         if (label === 'json') {
@@ -22,11 +20,6 @@ self.MonacoEnvironment = {
 };
 
 // monaco.editor.create(document.getElementById('editor'), {
-//     value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join('\n'),
-//     language: 'javascript'
+//     value: ['# Hello World', 'This is a markdown file'].join('\n'),
+//     language: 'markdown'
 // });
-
-monaco.editor.create(document.getElementById('editor'), {
-    value: ['# Hello World', 'This is a markdown file'].join('\n'),
-    language: 'markdown'
-});

@@ -1,16 +1,19 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
-
-async function handleFileOpen() {
-    const { canceled, filePaths } = await dialog.showOpenDialog()
-    if (canceled) {
-      return
-    } else {
-      return filePaths[0]
+const handlers = {
+    async openFile() {
+        const { canceled, filePaths } = await dialog.showOpenDialog()
+        if (canceled) {
+            return
+        } else {
+            const filePath = filePaths[0]
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            return { filePath, fileContent }
+        }
     }
-  }
-
+}
 const createWindow = () => {
     const window = new BrowserWindow({
         webPreferences: {
@@ -24,7 +27,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     // Add listeners for each preload event
-    ipcMain.handle('dialog:openFile', handleFileOpen)
+    ipcMain.handle('dialog:openFile', handlers.openFile)
     createWindow()
 
     app.on('activate', () => {
