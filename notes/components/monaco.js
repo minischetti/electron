@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor";
+const monaco = require("monaco-editor");
 
 self.MonacoEnvironment = {
     getWorkerUrl: function (moduleId, label) {

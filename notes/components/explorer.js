@@ -1,7 +1,7 @@
-document.getElementById('explorer').innerHTML = `
-    <div class="explorer">
-        I am the file explorer
-    </div>
-`;
+const btn = document.getElementById('btn')
+const filePathElement = document.getElementById('filePath')
 
-console.log("Pizza time!");
+btn.addEventListener('click', async () => {
+  const filePath = await window.api.openFile()
+  filePathElement.innerText = filePath
+})

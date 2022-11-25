@@ -1,16 +1,29 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
+
+async function handleFileOpen() {
+    const { canceled, filePaths } = await dialog.showOpenDialog()
+    if (canceled) {
+      return
+    } else {
+      return filePaths[0]
+    }
+  }
+
 const createWindow = () => {
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+    const window = new BrowserWindow({
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        },
     })
 
-    win.loadFile('index.html')
+    window.loadFile('index.html')
+    window.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
+    ipcMain.handle('dialog:openFile', handleFileOpen)
     createWindow()
 
     app.on('activate', () => {

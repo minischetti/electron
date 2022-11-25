@@ -1,4 +1,5 @@
+const { contextBridge, ipcRenderer } = require('electron')
 
-window.addEventListener('DOMContentLoaded', () => {
-});
-
+contextBridge.exposeInMainWorld('api', {
+    openFile: () => ipcRenderer.invoke('dialog:openFile')
+})
