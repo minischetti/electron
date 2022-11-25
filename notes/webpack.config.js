@@ -9,16 +9,17 @@ module.exports = {
 		},
 	},
 	entry: {
-		app: './index.js',
+		renderer: './renderer.js',
 		'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
 		'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
 		'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
 		'html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
-		'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker'
+		'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker',
+		'markdown.worker': 'monaco-editor/esm/vs/basic-languages/markdown/markdown.js'
 	},
 	output: {
 		globalObject: 'self',
-		filename: '[name].bundle.js',
+		filename: '[name].out.js',
 		path: path.resolve(__dirname, 'dist')
 	},
 	module: {

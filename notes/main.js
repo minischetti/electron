@@ -23,6 +23,7 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+    // Add listeners for each preload event
     ipcMain.handle('dialog:openFile', handleFileOpen)
     createWindow()
 
