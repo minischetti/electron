@@ -15,6 +15,7 @@ btn.addEventListener('click', async () => {
     editor = monaco.editor.create(document.getElementById("editor"), {
       value: fileContent,
       language: "markdown",
+      automaticLayout: true,
     });
   }
 })

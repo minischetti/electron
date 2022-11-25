@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; font-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="index.css">
     <title>Notes</title>
   </head>
   <body>
-    <div id="app" style="height: 800px;">
+    <div id="app">
       <div id="explorer">
         <button type="button" id="btn">Open a File</button>
         <span>File path: <strong id="filePath"></strong></span>
       </div>
-      <div id="editor" style="height: 100%"></div>
+      <div id="editor-container">
+        <div id="editor"></div>
+      </div>
     </div>
   </body>
   <script src="dist/renderer.out.js"></script>
