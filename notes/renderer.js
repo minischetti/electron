@@ -1,2 +1,1 @@
-import "./components/monaco";
-import "./components/explorer";
+import "./collections/app";
