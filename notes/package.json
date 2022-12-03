@@ -17,6 +17,7 @@
       "context": "node",
       "distDir": "dist",
       "publicUrl": "./",
+      "includeNodeModules": true,
       "source": [
         "preload.js"
       ]
@@ -25,6 +26,7 @@
       "context": "electron-renderer",
       "distDir": "dist",
       "publicUrl": "./",
+      "includeNodeModules": true,
       "source": [
         "renderer.js"
       ]
@@ -33,6 +35,7 @@
       "context": "electron-main",
       "distDir": "dist",
       "publicUrl": "./",
+      "includeNodeModules": true,
       "source": [
         "main.js"
       ]
@@ -42,7 +45,7 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && parcel build",
     "start": "electron .",
-    "dev": "electron ./dist",
+    "dev": "npm run clean && parcel watch",
     "start--fast": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

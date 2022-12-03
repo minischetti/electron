@@ -1,6 +1,11 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import { join } from 'path';
 import { readFileSync } from 'fs';
+// create react context
+import { createContext } from 'react';
+export const Context = createContext({
+    api: window.api
+});
 
 const handlers = {
     async openFile() {
@@ -24,7 +29,7 @@ const handlers = {
 const createWindow = () => {
     const window = new BrowserWindow({
         webPreferences: {
-            preload: join(__dirname, 'dist', 'preload.js')
+            preload: join(__dirname, 'preload.js')
         },
     })
 
