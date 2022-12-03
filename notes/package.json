@@ -2,29 +2,67 @@
   "name": "notes",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
-  "browser": "main.js",
+  "main": "dist/main.js",
+  "targets": {
+    "electron": {
+      "context": "browser",
+      "distDir": "dist",
+      "publicUrl": "./",
+      "includeNodeModules": true,
+      "source": [
+        "index.html"
+      ]
+    },
+    "electron-preload": {
+      "context": "node",
+      "distDir": "dist",
+      "publicUrl": "./",
+      "source": [
+        "preload.js"
+      ]
+    },
+    "electron-renderer": {
+      "context": "electron-renderer",
+      "distDir": "dist",
+      "publicUrl": "./",
+      "source": [
+        "renderer.js"
+      ]
+    },
+    "electron-main": {
+      "context": "electron-main",
+      "distDir": "dist",
+      "publicUrl": "./",
+      "source": [
+        "main.js"
+      ]
+    }
+  },
   "scripts": {
     "clean": "rm -rf dist && mkdir dist",
-    "build": "npm run clean && webpack",
-    "start": "npm run build && electron .",
+    "build": "npm run clean && parcel build",
+    "start": "electron .",
+    "dev": "electron ./dist",
     "start--fast": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "css-loader": "^6.7.2",
-    "electron": "^21.3.1",
-    "file-loader": "^6.2.0",
-    "html-loader": "^4.2.0",
-    "style-loader": "^3.3.1",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.0"
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@parcel/babel-preset-env": "^2.8.0",
+    "@parcel/config-default": "^2.8.0",
+    "@parcel/core": "^2.8.0",
+    "buffer": "^5.7.1",
+    "parcel": "^2.8.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10"
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
+    "electron": "^21.3.1",
     "globby": "^13.1.2",
-    "monaco-editor": "^0.34.1",
-    "path-browserify": "^1.0.1"
+    "monaco-editor": "^0.34.1"
   }
 }

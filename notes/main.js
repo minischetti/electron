@@ -1,6 +1,6 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const path = require('path');
-const fs = require('fs');
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const handlers = {
     async openFile() {
@@ -8,26 +8,36 @@ const handlers = {
         if (canceled) {
             return
         } else {
-            const filePath = filePaths[0]
-            const fileContent = fs.readFileSync(filePath, 'utf-8');
-            return { filePath, fileContent }
+            if (filePaths.length > 0) {
+                const filePath = filePaths[0]
+                const fileContent = readFileSync(filePath, 'utf-8');
+                if (fileContent) {
+                    return { filePath, fileContent }
+                }
+            }
         }
+    },
+    async openEditor(fileContent, container) {
+        container.innerText = fileContent
     }
-}
+}   
 const createWindow = () => {
     const window = new BrowserWindow({
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: join(__dirname, 'dist', 'preload.js')
         },
     })
 
-    window.loadFile('index.html')
+    window.loadFile(
+        join(__dirname, 'dist', 'index.html')
+    )
     window.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
     // Add listeners for each preload event
     ipcMain.handle('dialog:openFile', handlers.openFile)
+    ipcMain.handle('editor:open', handlers.openEditor)
     createWindow()
 
     app.on('activate', () => {
