@@ -1,6 +1,6 @@
-import { contextBridge, ipcRenderer } from 'electron'
+const electron = require('electron');
+const { contextBridge, ipcRenderer } = electron;
 
 contextBridge.exposeInMainWorld('api', {
     openFile: () => ipcRenderer.invoke('dialog:openFile'),
-    openEditor: () => ipcRenderer.invoke('editor:open'),
 })

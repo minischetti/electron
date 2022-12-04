@@ -1,10 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import { join } from 'path';
+import { join } from 'node:path';
 import { readFileSync } from 'fs';
 // create react context
 import { createContext } from 'react';
 export const Context = createContext({
-    api: window.api
 });
 
 const handlers = {
@@ -22,9 +21,6 @@ const handlers = {
             }
         }
     },
-    async openEditor(fileContent, container) {
-        container.innerText = fileContent
-    }
 }   
 const createWindow = () => {
     const window = new BrowserWindow({
@@ -42,7 +38,6 @@ const createWindow = () => {
 app.whenReady().then(() => {
     // Add listeners for each preload event
     ipcMain.handle('dialog:openFile', handlers.openFile)
-    ipcMain.handle('editor:open', handlers.openEditor)
     createWindow()
 
     app.on('activate', () => {

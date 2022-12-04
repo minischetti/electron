@@ -28,7 +28,7 @@
       "publicUrl": "./",
       "includeNodeModules": true,
       "source": [
-        "renderer.js"
+        "index.js"
       ]
     },
     "electron-main": {
@@ -45,7 +45,7 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && parcel build",
     "start": "electron .",
-    "dev": "npm run clean && parcel watch",
+    "watch": "parcel watch",
     "start--fast": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
