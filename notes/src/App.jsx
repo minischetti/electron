@@ -1,11 +1,8 @@
 
 import React, { useState } from 'react';
-// import { Context } from '../main';
+
 export function App() {
-    // use context
-    // const { api } = React.useContext(Context);
     const openFile = async () => {
-        // electron api call
         const results = await window.api.openFile();
         if (results.filePath) {
             setFilePath(results.filePath)
