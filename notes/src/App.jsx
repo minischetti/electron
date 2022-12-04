@@ -11,7 +11,7 @@ export function App() {
             setFileContent(results.fileContent)
         }
     }
-    function getFileTree() {
+    const getFileTree = () => {
         return window.api.getFileTree().then((results) => {
             console.log(results)
             setFileTree(results)
@@ -19,6 +19,8 @@ export function App() {
     }
     useEffect(() => {
         getFileTree();
+
+        window.api.updateExplorerTree(getFileTree);
     }, []);
     const [filePath, setFilePath] = useState("");
     const [fileContent, setFileContent] = useState("");
@@ -36,7 +38,9 @@ export function App() {
                             }>{file.name} (file)</div>
                             
                         } else if (file.isDirectory) {
-                            return <div key={index}>{file.name} (dir)</div>
+                            return <div key={index}>
+                                <div>{file.name}</div>
+                            </div>
                         }
                     })}
                 </div>

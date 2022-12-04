@@ -1,12 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import { join } from 'node:path';
+import path, { join, resolve } from 'node:path';
 import fs from 'fs';
 // create react context
 import { createContext } from 'react';
-import { fstat } from 'node:fs';
-export const Context = createContext({
-});
-
+import watcher from '@parcel/watcher';
 const handlers = {
     async selectFile() {
         const { canceled, filePaths } = await dialog.showOpenDialog()
@@ -31,9 +28,9 @@ const handlers = {
         }
     },
     getFileTree() {
-        const root = join(__dirname, 'sandbox');
+        const root = resolve(__dirname, 'sandbox');
         const files = fs.readdirSync(root);
-        const new_files = files.map(file => {
+        return files.map(file => {
             const path = join(root, file);
             const stats = fs.statSync(path);
             return {
@@ -44,34 +41,54 @@ const handlers = {
                 stats: stats
             }
         });
-        return new_files;
-    } 
-}  
-const createWindow = () => {
-        const window = new BrowserWindow({
-            webPreferences: {
-                preload: join(__dirname, 'preload.js')
-            },
-        })
-
-        window.loadFile(
-            join(__dirname, 'dist', 'index.html')
-        )
-        window.webContents.openDevTools()
     }
+}
+const createWindow = async () => {
+    const window = new BrowserWindow({
+        webPreferences: {
+            preload: join(__dirname, 'preload.js')
+        },
+    })
+
+    const root = resolve(__dirname, 'sandbox');
+
+    await watcher.subscribe(root, (err, events) => {
+        const new_files = fs.readdirSync(root);
+        // send new files to renderer
+        window.webContents.send('update:explorer:tree', new_files);
+        console.log(new_files);
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(events);
+        }
+    });
+
+    window.loadFile(
+        join(__dirname, 'dist', 'index.html')
+    )
+
+    window.webContents.openDevTools()
+}
 
 app.whenReady().then(() => {
-        // Add listeners for each preload event
-        ipcMain.handle('dialog:openFile', handlers.openFile)
-        ipcMain.handle('dialog:selectFile', handlers.selectFile)
-        ipcMain.handle('explorer:getFileTree', handlers.getFileTree)
-        createWindow()
+    // Add listeners for each preload event
+    ipcMain.handle('dialog:openFile', handlers.openFile)
+    ipcMain.handle('dialog:selectFile', handlers.selectFile)
+    ipcMain.handle('explorer:getFileTree', handlers.getFileTree)
+    // watcher.subscribe({
+    //     root: join(__dirname, 'sandbox'),
+    //     onEvent: (event) => {
+    //         console.log(event);
+    //     }
+    // });
+    createWindow()
 
-        app.on('activate', () => {
-            if (BrowserWindow.getAllWindows().length === 0) createWindow()
-        })
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
+})
 
 app.on('window-all-closed', () => {
-        if (process.platform !== 'darwin') app.quit()
-    })
+    if (process.platform !== 'darwin') app.quit()
+})
