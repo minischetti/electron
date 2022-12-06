@@ -21,11 +21,7 @@ const Tree = {
                 <div className={`tree-item--children${open? " open" : ""}`}>
                     {children?.map((child, index) => {
                         return (
-                            <div key={index} className='tree-item--container'>
-                                <div className='tree-item--header'>
-                                    <div>{child.name}</div>
-                                </div>
-                            </div>
+                            <Tree.Item key={index} file={child} children={child.children}/>
                         )
                     })}
                 </div>

@@ -28,36 +28,44 @@ const handlers = {
     getExplorerTree() {
         const root = resolve(__dirname, 'sandbox');
         const files = fs.readdirSync(root);
+        const updateFile = (file) => {
+            let new_file = {};
+            const stats = fs.statSync(file);
+            new_file = {
+                name: file,
+                path: join(path.dirname(file), path.basename(file)),
+                isFile: stats.isFile(),
+                isDirectory: stats.isDirectory(),
+            }
+            if (stats.isDirectory()) {
+                new_file.children = fs.readdirSync(file)
+                    .map((child) => {
+                        const child_path = join(file, child);
+                        return updateFile(child_path);
+                    })
+            }
+            return new_file;
+        }
         return files
-            .map((file, index) => {
-                return files[index] = join(root, file);
-            })
+            // .map((file, index) => {
+            //     return files[index] = join(root, file);
+            // })
             .map((file) => {
-                const stats = fs.statSync(file);
-                const new_file = {
-                    name: file,
-                    path: resolve(file),
-                    isFile: stats.isFile(),
-                    isDirectory: stats.isDirectory(),
-                }
-                if (stats.isDirectory()) {
-                    new_file.children = fs.readdirSync(file)
-                        .map((file) => {
-                            return {
-                                name: file,
-                                path: resolve(file),
-                                isFile: stats.isFile(),
-                                isDirectory: stats.isDirectory(),
-                            }
-                        })
-                }
+                // send file path to updateFile
+                const file_path = join(root, file);
+                const new_file = updateFile(file_path);
+                // if (new_file.isDirectory) {
+                //     new_file.children = fs.readdirSync(new_file.name)
+                //         .map((child) => {
+                //             return updateFile(child);
+                //         })
+                // }
                 return new_file;
             })
     },
     // update explorer tree with path from argument
     updateExplorerTree(path) {
         // send new files to renderer
-        console.log(path);
         const files = fs.readdirSync(path);
         return files.map(file => {
             const path = join(path, file);
