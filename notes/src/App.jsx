@@ -11,34 +11,39 @@ export function App() {
             setFileContent(results.fileContent)
         }
     }
-    const getFileTree = () => {
-        return window.api.getFileTree().then((results) => {
-            console.log(results)
-            setFileTree(results)
-        })
+    const getExplorerTree = () => {
+        return window.api.explorer.tree.get().then((results) => {
+            console.log(results);
+            setExplorerTree(results)
+        });
+    }
+    const updateExplorerTree = (file) => {
+        // console.log(path);
+        window.api.explorer.tree.update(file.name).then((results) => {
+            // console.log(results);
+            setExplorerTree(results)
+        });
     }
     useEffect(() => {
-        getFileTree();
-
-        window.api.updateExplorerTree(getFileTree);
+        getExplorerTree();
     }, []);
     const [filePath, setFilePath] = useState("");
     const [fileContent, setFileContent] = useState("");
-    const [fileTree, setFileTree] = useState([]);
+    const [explorerTree, setExplorerTree] = useState([]);
     return (
         <div id="app">
             <div id="tree">
                 <div>
-                    {fileTree?.map((file, index) => {
+                    {explorerTree?.map((file, index) => {
                         if (file.isFile) {
-                            return <div key={index} onClick={
-                                () => {
-                                    openFile(file.path)
-                                }
-                            }>{file.name} (file)</div>
+                            return <div key={index}>
+                                <div>File</div>
+                                <div>{file.name}</div>
+                            </div>
                             
                         } else if (file.isDirectory) {
-                            return <div key={index}>
+                            return <div key={index} onClick={() => updateExplorerTree(file)}>
+                                <div>Folder</div>
                                 <div>{file.name}</div>
                             </div>
                         }
@@ -47,7 +52,7 @@ export function App() {
             </div>
             <button onClick={selectFile}>Open File</button>
             <div>{filePath}</div>
-            <div id="editor" contentEditable="true">
+            <div id="editor">
                 {fileContent}
             </div>
         </div >

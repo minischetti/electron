@@ -1,8 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path, { join, resolve } from 'node:path';
 import fs from 'fs';
-// create react context
-import { createContext } from 'react';
 import watcher from '@parcel/watcher';
 const handlers = {
     async selectFile() {
@@ -27,21 +25,55 @@ const handlers = {
             console.log('Error: fileContent is undefined');
         }
     },
-    getFileTree() {
+    getExplorerTree() {
         const root = resolve(__dirname, 'sandbox');
         const files = fs.readdirSync(root);
+        return files
+            .map((file, index) => {
+                return files[index] = join(root, file);
+            })
+            .map((file) => {
+                const stats = fs.statSync(file);
+                const new_file = {
+                    name: file,
+                    path: resolve(file),
+                    isFile: stats.isFile(),
+                    isDirectory: stats.isDirectory(),
+                }
+                if (stats.isDirectory()) {
+                    new_file.children = fs.readdirSync(file)
+                        .map((file) => {
+                        return {
+                            name: file,
+                            path: resolve(file),
+                            isFile: stats.isFile(),
+                            isDirectory: stats.isDirectory(),
+                        }
+                    })
+                }
+                return new_file;
+            })
+    },
+    // update explorer tree with path from argument
+    updateExplorerTree(path) {
+        // send new files to renderer
+        console.log(path);
+        const files = fs.readdirSync(path);
         return files.map(file => {
-            const path = join(root, file);
+            const path = join(path, file);
             const stats = fs.statSync(path);
             return {
                 name: file,
-                path,
+                path: path,
                 isFile: stats.isFile(),
                 isDirectory: stats.isDirectory(),
-                stats: stats
             }
         });
-    }
+    },
+    // updateExplorerTree(event, directory) {
+    //     const window = BrowserWindow.fromWebContents(event.sender);
+    //     window.webContents.send('explorer:tree::update', directory);
+    // },
 }
 const createWindow = async () => {
     const window = new BrowserWindow({
@@ -53,9 +85,9 @@ const createWindow = async () => {
     const root = resolve(__dirname, 'sandbox');
 
     await watcher.subscribe(root, (err, events) => {
-        const new_files = fs.readdirSync(root);
+        const new_files = fs.readdirSync(root)
         // send new files to renderer
-        window.webContents.send('update:explorer:tree', new_files);
+        // window.webContents.send('explorer:tree::update', new_files);
         console.log(new_files);
         if (err) {
             console.log(err);
@@ -68,6 +100,7 @@ const createWindow = async () => {
         join(__dirname, 'dist', 'index.html')
     )
 
+
     window.webContents.openDevTools()
 }
 
@@ -75,7 +108,8 @@ app.whenReady().then(() => {
     // Add listeners for each preload event
     ipcMain.handle('dialog:openFile', handlers.openFile)
     ipcMain.handle('dialog:selectFile', handlers.selectFile)
-    ipcMain.handle('explorer:getFileTree', handlers.getFileTree)
+    ipcMain.handle('explorer:tree::get', handlers.getExplorerTree)
+    ipcMain.handle('explorer:tree::update', handlers.updateExplorerTree)
     // watcher.subscribe({
     //     root: join(__dirname, 'sandbox'),
     //     onEvent: (event) => {
