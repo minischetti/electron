@@ -1,6 +1,28 @@
 
 import React, { useState, useEffect } from 'react';
 
+const Tree = {
+    Item: ({ file, children }) => (
+        <div className='tree-item--container'>
+            <div className='tree-item--header'>
+                <div>{file.name}</div>
+            </div>
+            <div className='tree-item--children'>
+                {children?.map((child, index) => {
+                    return (
+                        <div key={index} className='tree-item--container'>
+                            <div className='tree-item--header'>
+                                <div>{child.name}</div>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+    )
+}
+
+
 export function App() {
     const selectFile = async () => {
         const results = await window.api.selectFile();
@@ -44,30 +66,11 @@ export function App() {
                         {explorerTree?.map((file, index) => {
                             if (file.isFile) {
                                 return (
-                                    <div key={index} className='tree-item--container'>
-                                        <div className='tree-item--header'>
-                                            <div>{file.name}</div>
-                                        </div>
-                                    </div>
+                                    <Tree.Item key={index} file={file} index={index} />
                                 )
                             } else if (file.isDirectory) {
                                 return (
-                                    <div key={index} className='tree-item--container'>
-                                        <div className='tree-item--header'>
-                                            <div>{file.name}</div>
-                                        </div>
-                                        <div className='tree-item--children'>
-                                            {file.children?.map((child, index) => {
-                                                return (
-                                                    <div key={index} className='tree-item--container'>
-                                                        <div className='tree-item--header'>
-                                                            <div>{child.name}</div>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
+                                    <Tree.Item key={index} file={file} index={index} children={file.children} />
                                 )
                             }
                         })}
