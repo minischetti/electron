@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { CaretDown, CaretRight } from "phosphor-react";
+import { CaretDown, CaretRight, Folder, File } from "phosphor-react";
 
 const Tree = {
     Item: ({ file, children = [] }) => {
@@ -8,6 +8,7 @@ const Tree = {
         return (
             <div className='tree-item--container'>
                 <div className={`tree-item--header${children.length ? ' has-children' : ''}`} onClick={children?() => setOpen(!open) : null}>
+                    {file.isDirectory ? <Folder/> : <File/>}
                     {children.length ? (open ? 
                         <CaretDown className='tree-item--header-icon'/> 
                         : <CaretRight className='tree-item--header-icon'/>
