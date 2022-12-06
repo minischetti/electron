@@ -32,38 +32,52 @@ export function App() {
     const [explorerTree, setExplorerTree] = useState([]);
     return (
         <div id="app">
-            <div id="tree">
-                <div>
-                    {explorerTree?.map((file, index) => {
-                        if (file.isFile) {
-                            return <div key={index}>
-                                <div>{file.name}</div>
-                            </div>
-
-                        } else if (file.isDirectory) {
-                            return (
-                                <div key={index}>
-                                    <div>{file.name}</div>
-                                    <div className='children'>
-                                        {file.children?.map((child, index) => {
-                                            return (
-                                                <div key={index}>
-                                                    <div>{child.name}</div>
-                                                </div>
-                                            )
-                                        })}
+            <div className='container'>
+                <div className='header'>
+                    <h1>Explorer</h1>
+                    <div className='toolbar'>
+                        <button onClick={selectFile}>Open File</button>
+                    </div>
+                </div>
+                <div className='content'>
+                    <div className='tree'>
+                        {explorerTree?.map((file, index) => {
+                            if (file.isFile) {
+                                return (
+                                    <div key={index} className='tree-item--container'>
+                                        <div className='tree-item--header'>
+                                            <div>{file.name}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        }
-                    })}
+                                )
+                            } else if (file.isDirectory) {
+                                return (
+                                    <div key={index} className='tree-item--container'>
+                                        <div className='tree-item--header'>
+                                            <div>{file.name}</div>
+                                        </div>
+                                        <div className='tree-item--children'>
+                                            {file.children?.map((child, index) => {
+                                                return (
+                                                    <div key={index} className='tree-item--container'>
+                                                        <div className='tree-item--header'>
+                                                            <div>{child.name}</div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })}
+                    </div>
+                    <div id="editor">
+                        <div>{filePath}</div>
+                        <div>{fileContent}</div>
+                    </div>
                 </div>
             </div>
-            <button onClick={selectFile}>Open File</button>
-            <div>{filePath}</div>
-            <div id="editor">
-                {fileContent}
-            </div>
-        </div >
+        </div>
     )
 }
