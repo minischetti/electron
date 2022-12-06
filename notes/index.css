@@ -40,7 +40,16 @@ body {
 }
 
 .tree-item--header {
+    display: flex;
+    flex-direction: row;
     padding: .25rem 1rem;
+    gap: .25rem;
+    align-items: center;
+    user-select: none;
+}
+
+.tree-item--header.has-children {
+    cursor: pointer;
 }
 
 .tree-item--header:hover {
@@ -48,9 +57,13 @@ body {
 }
 
 .tree-item--children {
-    display: flex;
+    display: none;
     flex-direction: column;
     margin-left: 1rem;
     padding-left: .5rem;
     border-left: .1rem solid #ccc;
+}
+
+.tree-item--children.open {
+    display: flex;
 }

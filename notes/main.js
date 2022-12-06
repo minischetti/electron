@@ -43,13 +43,13 @@ const handlers = {
                 if (stats.isDirectory()) {
                     new_file.children = fs.readdirSync(file)
                         .map((file) => {
-                        return {
-                            name: file,
-                            path: resolve(file),
-                            isFile: stats.isFile(),
-                            isDirectory: stats.isDirectory(),
-                        }
-                    })
+                            return {
+                                name: file,
+                                path: resolve(file),
+                                isFile: stats.isFile(),
+                                isDirectory: stats.isDirectory(),
+                            }
+                        })
                 }
                 return new_file;
             })
