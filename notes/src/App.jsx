@@ -37,15 +37,24 @@ export function App() {
                     {explorerTree?.map((file, index) => {
                         if (file.isFile) {
                             return <div key={index}>
-                                <div>File</div>
                                 <div>{file.name}</div>
                             </div>
-                            
+
                         } else if (file.isDirectory) {
-                            return <div key={index} onClick={() => updateExplorerTree(file)}>
-                                <div>Folder</div>
-                                <div>{file.name}</div>
-                            </div>
+                            return (
+                                <div key={index}>
+                                    <div>{file.name}</div>
+                                    <div className='children'>
+                                        {file.children?.map((child, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <div>{child.name}</div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            )
                         }
                     })}
                 </div>
