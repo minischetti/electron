@@ -9,7 +9,10 @@ const Tree = {
             <div className='tree-item--container'>
                 <div className={`tree-item--header${children.length ? ' has-children' : ''}`} onClick={children?() => setOpen(!open) : null}>
                     {file.isDirectory ? <Folder/> : <File/>}
-                    {children.length ? (open ? 
+                    {file.isDirectory && children.length ? 
+                        <div className='tree-item--child-count'>{children.length}</div>
+                    : null }
+                    {file.isDirectory && children.length ? (open ? 
                         <CaretDown className='tree-item--header-icon'/> 
                         : <CaretRight className='tree-item--header-icon'/>
                     ) : ""}
