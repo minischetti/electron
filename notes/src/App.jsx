@@ -1,22 +1,27 @@
 
 import React, { useState, useEffect } from 'react';
-import { CaretDown, CaretRight, Folder, File } from "phosphor-react";
+import { CaretDown, CaretRight, Folder, File, FolderOpen } from "phosphor-react";
 
 const Tree = {
     Item: ({ file, children = [] }) => {
         const [open, setOpen] = useState(false);
         return (
             <div className='tree-item--container'>
-                <div className={`tree-item--header${children.length ? ' has-children' : ''}`} onClick={children ? () => setOpen(!open) : null}>
-                    {file.isDirectory ? <Folder /> : <File />}
-                    {file.isDirectory && children.length ?
-                        <div className='tree-item--child-count'>{children.length}</div>
-                        : null}
-                    {file.isDirectory && children.length ? (open ?
+                <div className={`tree-item--header${children.length ? ' has-children' : ''}`} onClick={children.length ? () => setOpen(!open) : null}>
+                    {file.isDirectory ?
+                        open ? <FolderOpen /> : <Folder />
+                        : <File />
+                    }
+                    {/* {file.isDirectory && children.length ? (open ?
                         <CaretDown className='tree-item--header-icon' />
                         : <CaretRight className='tree-item--header-icon' />
-                    ) : ""}
-                    <div>{file.name}</div>
+                    ) : ""} */}
+                    <div className='tree-item-name'>{file.name}</div>
+                    {file.isDirectory && children.length ?
+                        <div>
+                            <div className='tree-item--child-count'>{children.length}</div>
+                        </div>
+                        : null}
                 </div>
                 <div className={`tree-item--children${open ? " open" : ""}`}>
                     {children?.map((child, index) => {
@@ -47,22 +52,33 @@ export function App() {
             setExplorerTree(results)
         });
     }
+    const getExplorerDirectory = () => {
+        return window.api.explorer.directory.get().then((results) => {
+            console.log(results);
+            setCurrentDirectory(results)
+        });
+    }
     useEffect(() => {
         getExplorerTree();
+        getExplorerDirectory();
+
         window.api.explorer.tree.onUpdateListener(getExplorerTree);
     }, []);
     const [filePath, setFilePath] = useState("");
     const [fileContent, setFileContent] = useState("");
     const [explorerTree, setExplorerTree] = useState([]);
+    const [currentDirectory, setCurrentDirectory] = useState("");
     return (
         <div id="app" className='container'>
             <div className='content'>
                 <div className='section responsive section--tree'>
-                    <div className='header'>
+                    {/* <div className='header'>
                         <div className='toolbar'>
                             <button onClick={selectFile}>Open File</button>
                         </div>
-                    </div>
+                    </div> */}
+                    {currentDirectory ? <div>{currentDirectory}</div> : null}
+                    <div className='divider--h'></div>
                     <div className='tree'>
                         {explorerTree?.map((file, index) => {
                             if (file.isFile || (file.isDirectory && !file.children)) {

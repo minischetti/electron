@@ -29,6 +29,13 @@ body {
     padding: 1rem;
 }
 
+.divider--h {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 1rem 0;
+}
+
 .toolbar {
     display: flex;
     flex-direction: row;
@@ -59,12 +66,15 @@ body {
 
 .tree-item--header {
     display: flex;
-    flex-direction: row;
     padding: .25rem .5rem;
     gap: .25rem;
     align-items: center;
     user-select: none;
     border-radius: .25rem;
+}
+
+.tree-item-name {
+    flex: 1;
 }
 
 .tree-item--header.has-children {

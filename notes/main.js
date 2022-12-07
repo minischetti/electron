@@ -25,6 +25,10 @@ const handlers = {
             console.log('Error: fileContent is undefined');
         }
     },
+    getExplorerDirectory() {
+        const root = resolve(__dirname, 'sandbox');
+        return root;
+    },
     getExplorerTree() {
         const root = resolve(__dirname, 'sandbox');
         const files = fs.readdirSync(root);
@@ -32,8 +36,8 @@ const handlers = {
             let new_file = {};
             const stats = fs.statSync(file);
             new_file = {
-                name: file,
-                path: join(path.dirname(file), path.basename(file)),
+                name: path.basename(file),
+                path: join(path.dirname(file), path.basename(file)),    
                 isFile: stats.isFile(),
                 isDirectory: stats.isDirectory(),
             }
@@ -88,6 +92,7 @@ app.whenReady().then(() => {
     ipcMain.handle('dialog:openFile', handlers.openFile)
     ipcMain.handle('dialog:selectFile', handlers.selectFile)
     ipcMain.handle('explorer:tree::get', handlers.getExplorerTree)
+    ipcMain.handle('explorer:tree:directory::get', handlers.getExplorerDirectory)
     // watcher.subscribe({
     //     root: join(__dirname, 'sandbox'),
     //     onEvent: (event) => {
