@@ -51,37 +51,11 @@ const handlers = {
             //     return files[index] = join(root, file);
             // })
             .map((file) => {
-                // send file path to updateFile
                 const file_path = join(root, file);
                 const new_file = updateFile(file_path);
-                // if (new_file.isDirectory) {
-                //     new_file.children = fs.readdirSync(new_file.name)
-                //         .map((child) => {
-                //             return updateFile(child);
-                //         })
-                // }
                 return new_file;
             })
     },
-    // update explorer tree with path from argument
-    updateExplorerTree(path) {
-        // send new files to renderer
-        const files = fs.readdirSync(path);
-        return files.map(file => {
-            const path = join(path, file);
-            const stats = fs.statSync(path);
-            return {
-                name: file,
-                path: path,
-                isFile: stats.isFile(),
-                isDirectory: stats.isDirectory(),
-            }
-        });
-    },
-    // updateExplorerTree(event, directory) {
-    //     const window = BrowserWindow.fromWebContents(event.sender);
-    //     window.webContents.send('explorer:tree::update', directory);
-    // },
 }
 const createWindow = async () => {
     const window = new BrowserWindow({
@@ -93,10 +67,7 @@ const createWindow = async () => {
     const root = resolve(__dirname, 'sandbox');
 
     await watcher.subscribe(root, (err, events) => {
-        const new_files = fs.readdirSync(root)
-        // send new files to renderer
-        // window.webContents.send('explorer:tree::update', new_files);
-        console.log(new_files);
+        window.webContents.send('explorer:tree::update');
         if (err) {
             console.log(err);
         } else {
@@ -117,7 +88,6 @@ app.whenReady().then(() => {
     ipcMain.handle('dialog:openFile', handlers.openFile)
     ipcMain.handle('dialog:selectFile', handlers.selectFile)
     ipcMain.handle('explorer:tree::get', handlers.getExplorerTree)
-    ipcMain.handle('explorer:tree::update', handlers.updateExplorerTree)
     // watcher.subscribe({
     //     root: join(__dirname, 'sandbox'),
     //     onEvent: (event) => {

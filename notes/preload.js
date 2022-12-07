@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('api', {
     explorer: {
         tree: {
             get: (content) => ipcRenderer.invoke('explorer:tree::get', content),
-            update: (content) => ipcRenderer.send('explorer:tree::update', content),
+            onUpdateListener: (callback) => ipcRenderer.on('explorer:tree::update', callback),
         }
     },
 })
