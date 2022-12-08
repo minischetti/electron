@@ -1,0 +1,9 @@
+.toolbar {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.toolbar--inline {
+    gap: .5rem;
+}

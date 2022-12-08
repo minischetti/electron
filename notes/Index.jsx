@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { CaretDown, CaretRight, Folder, File, FolderOpen } from "phosphor-react";
+import { CaretDown, CaretRight, FolderNotch, File, FolderNotchOpen, FolderNotchPlus } from "phosphor-react";
 
 const Tree = {
     Item: ({ file, children = [] }) => {
@@ -8,20 +8,25 @@ const Tree = {
         return (
             <div className='tree-item--container'>
                 <div className={`tree-item--header${children.length ? ' has-children' : ''}`} onClick={children.length ? () => setOpen(!open) : null}>
-                    {file.isDirectory ?
-                        open ? <FolderOpen /> : <Folder />
-                        : <File />
-                    }
-                    {/* {file.isDirectory && children.length ? (open ?
+                    {file.isDirectory && children.length ? (open ?
                         <CaretDown className='tree-item--header-icon' />
                         : <CaretRight className='tree-item--header-icon' />
-                    ) : ""} */}
+                    ) : ""}
+                    {file.isDirectory ?
+                        open ? <FolderNotchOpen /> : <FolderNotch />
+                        : <File />
+                    }
                     <div className='tree-item-name'>{file.name}</div>
-                    {file.isDirectory && children.length ?
-                        <div>
-                            <div className='tree-item--child-count'>{children.length}</div>
+                    {file.isDirectory ?
+                        <div className="btn--icon">
+                            <FolderNotchPlus />
                         </div>
                         : null}
+                    {file.isDirectory && children.length ?
+                        <div className='number'>{children.length}</div>
+                        : null}
+                    <div className='toolbar toolbar--inline'>
+                    </div>
                 </div>
                 <div className={`tree-item--children${open ? " open" : ""}`}>
                     {children?.map((child, index) => {
@@ -36,7 +41,7 @@ const Tree = {
 }
 
 
-export function App() {
+export function Index() {
     const selectFile = async () => {
         const results = await window.api.selectFile();
         if (results.filePath) {
