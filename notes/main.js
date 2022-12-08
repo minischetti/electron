@@ -25,10 +25,13 @@ const handlers = {
             console.log('Error: fileContent is undefined');
         }
     },
-    newExplorerDirectory(path) {
-        const root = resolve(__dirname, 'sandbox');
-        const new_path = join(root, path);
-        fs.mkdirSync(new_path);
+    newExplorerDirectory(event, path) {
+        if (fs.existsSync(resolve(path) + '/New Folder')) {
+            console.error('Folder already exists');
+        } else {
+            fs.mkdirSync(resolve(path) + '/New Folder');
+            console.log('Folder created');
+        }
     },
     getExplorerDirectory() {
         const root = resolve(__dirname, 'sandbox');
@@ -42,7 +45,7 @@ const handlers = {
             const stats = fs.statSync(file);
             new_file = {
                 name: path.basename(file),
-                path: join(path.dirname(file), path.basename(file)),    
+                path: resolve(path.dirname(file), path.basename(file)),    
                 isFile: stats.isFile(),
                 isDirectory: stats.isDirectory(),
             }
@@ -89,7 +92,7 @@ const createWindow = async () => {
     )
 
 
-    window.webContents.openDevTools()
+    // window.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {

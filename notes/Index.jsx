@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { CaretDown, CaretRight, FolderNotch, File, FolderNotchOpen, FolderNotchPlus } from "phosphor-react";
 
 const Tree = {
-    Item: ({ file, children = [] }) => {
+    Item: ({ file, content = [], children}) => {
         const [open, setOpen] = useState(false);
         return (
             <div className='tree-item--container'>
-                <div className={`tree-item--header${children.length ? ' has-children' : ''}`} onClick={children.length ? () => setOpen(!open) : null}>
-                    {file.isDirectory && children.length ? (open ?
+                <div className={`tree-item--header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
+                    {file.isDirectory && content.length ? (open ?
                         <CaretDown className='tree-item--header-icon' />
                         : <CaretRight className='tree-item--header-icon' />
                     ) : ""}
@@ -17,21 +17,17 @@ const Tree = {
                         : <File />
                     }
                     <div className='tree-item-name'>{file.name}</div>
-                    {file.isDirectory ?
-                        <div className="btn--icon">
-                            <FolderNotchPlus />
-                        </div>
-                        : null}
-                    {file.isDirectory && children.length ?
-                        <div className='number'>{children.length}</div>
+                    {children}
+                    {file.isDirectory && content.length ?
+                        <div className='number'>{content.length}</div>
                         : null}
                     <div className='toolbar toolbar--inline'>
                     </div>
                 </div>
                 <div className={`tree-item--children${open ? " open" : ""}`}>
-                    {children?.map((child, index) => {
+                    {content?.map((child, index) => {
                         return (
-                            <Tree.Item key={index} file={child} children={child.children} />
+                            <Tree.Item key={index} file={child} content={child.children} />
                         )
                     })}
                 </div>
@@ -63,6 +59,12 @@ export function Index() {
             setCurrentDirectory(results)
         });
     }
+    const newExplorerDirectory = (event, path) => {
+        event.preventDefault();
+        return window.api.explorer.directory.new(path).then((results) => {
+            console.log(results);
+        });
+    }
     useEffect(() => {
         getExplorerTree();
         getExplorerDirectory();
@@ -92,7 +94,11 @@ export function Index() {
                                 )
                             } else if (file.isDirectory && file.children) {
                                 return (
-                                    <Tree.Item key={index} file={file} index={index} children={file.children} />
+                                    <Tree.Item key={index} file={file} index={index} content={file.children}>
+                                        <div className="btn--icon" onClick={(event) => newExplorerDirectory(event, file.path)}>
+                                            <FolderNotchPlus />
+                                        </div>
+                                    </Tree.Item>
                                 )
                             }
                         })}
