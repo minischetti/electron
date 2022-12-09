@@ -1,30 +1,100 @@
 
-import React, { useState, useEffect } from 'react';
-import { CaretDown, CaretRight, FolderNotch, File, FolderNotchOpen, FolderNotchPlus } from "phosphor-react";
+import React, { useState, useEffect, useRef } from 'react';
+import { CaretDown, CaretRight, FolderNotch, File, FolderNotchOpen, FolderNotchPlus, Check, X } from "phosphor-react";
 
 const Tree = {
-    Item: ({ file, content = [], children}) => {
+    Item: ({ children, file, content = [], handleCreateNewDirectory }) => {
         const [open, setOpen] = useState(false);
+        const [shouldShowNewDirectoryForm, setShouldShowNewDirectoryForm] = useState(false);
+        const showNewDirectoryForm = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setShouldShowNewDirectoryForm(true);
+            setOpen(true);
+        }
+
+        const NewDirectoryForm = ({ parent_path }) => {
+            const handleClick = (event) => {
+                event.stopPropagation();
+            }
+
+            const handleCloseButtonClick = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setShouldShowNewDirectoryForm(false);
+                setOpen(false);
+            }
+
+            const handleKeyEvents = (event) => {
+                // if key is escape, close the form
+                if (event.keyCode === 27) {
+                    setOpen(false);
+                    setShouldShowNewDirectoryForm(false);
+                }
+                // if key is enter, submit the form
+                if (event.keyCode === 13) {
+                    const new_path = parent_path + "/" + event.target.value;
+                    handleCreateNewDirectory(new_path);
+                }
+            }
+
+            const handleSubmit = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const new_path = parent_path + "/" + event.target[0].value;
+                handleCreateNewDirectory(new_path);
+                setShouldShowNewDirectoryForm(false);
+            }
+            return (
+                <div>
+                    <form className='input-container' onSubmit={handleSubmit}>
+                        <input type="text" placeholder='Folder name' onClick={handleClick} onKeyUp={handleKeyEvents} />
+                        <button type="button" className='btn btn--negative' onClick={handleCloseButtonClick}>
+                            <div className='btn-stack'>
+                                <span className='btn-shortcut'>Esc</span>
+                                <span className='btn-action'>Cancel</span>
+                            </div>
+                            {/* <X /> */}
+                        </button>
+                        <button type="submit" className='btn btn--positive'>
+                            <div className='btn-stack'>
+                                <span className='btn-shortcut'>Enter</span>
+                                <span className='btn-action'>Create</span>
+                            </div>
+                            {/* <Check /> */}
+                        </button>
+                    </form>
+                </div>
+            )
+        }
+
         return (
-            <div className='tree-item--container'>
-                <div className={`tree-item--header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
-                    {file.isDirectory && content.length ? (open ?
-                        <CaretDown className='tree-item--header-icon' />
-                        : <CaretRight className='tree-item--header-icon' />
-                    ) : ""}
+            <div className={`tree-item-container${open ? ' tree-item-container--open' : ""}`}>
+                <div className={`tree-item-header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
                     {file.isDirectory ?
                         open ? <FolderNotchOpen /> : <FolderNotch />
                         : <File />
                     }
                     <div className='tree-item-name'>{file.name}</div>
-                    {children}
+                    <div className='toolbar toolbar--inline'>
+                        <div className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
+                            <FolderNotchPlus />
+                        </div>
+                    </div>
                     {file.isDirectory && content.length ?
                         <div className='number'>{content.length}</div>
                         : null}
-                    <div className='toolbar toolbar--inline'>
-                    </div>
+                    {file.isDirectory && content.length ? (open ?
+                        <CaretDown className='tree-item-header-icon' />
+                        : <CaretRight className='tree-item-header-icon' />
+                    ) : ""}
                 </div>
-                <div className={`tree-item--children${open ? " open" : ""}`}>
+                {shouldShowNewDirectoryForm && open ?
+                    <div>
+                        <NewDirectoryForm parent_path={file.path} />
+                    </div>
+                    : null}
+                <div className={`tree-item-children${open ? " open" : ""}`}>
                     {content?.map((child, index) => {
                         return (
                             <Tree.Item key={index} file={child} content={child.children} />
@@ -59,9 +129,8 @@ export function Index() {
             setCurrentDirectory(results)
         });
     }
-    const newExplorerDirectory = (event, path) => {
-        event.preventDefault();
-        event.stopPropagation();
+
+    const handleCreateNewDirectory = (path) => {
         return window.api.explorer.directory.new(path).then((results) => {
             console.log(results);
         });
@@ -76,8 +145,6 @@ export function Index() {
     const [fileContent, setFileContent] = useState("");
     const [explorerTree, setExplorerTree] = useState([]);
     const [currentDirectory, setCurrentDirectory] = useState("");
-    const [showNewDirectoryForm, setShowNewDirectoryForm] = useState(false);
-    const [newDirectoryName, setNewDirectoryName] = useState("");
     return (
         <div id="app" className='container'>
             <div className='content'>
@@ -97,11 +164,9 @@ export function Index() {
                                 )
                             } else if (file.isDirectory && file.children) {
                                 return (
-                                    <Tree.Item key={index} file={file} index={index} content={file.children}>
-                                        <div className="btn--icon" onClick={(event) => newExplorerDirectory(event, file.path)}>
-                                            <FolderNotchPlus />
-                                        </div>
-                                    </Tree.Item>
+                                    <div>
+                                        <Tree.Item key={index} file={file} index={index} content={file.children} handleCreateNewDirectory={handleCreateNewDirectory} />
+                                    </div>
                                 )
                             }
                         })}

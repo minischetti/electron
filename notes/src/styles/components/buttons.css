@@ -3,3 +3,34 @@
     display: flex;
     align-items: center;
 }
+
+.btn {
+    cursor: pointer;
+    display: flex;
+    font-size: .75rem;
+    font-weight: bold;
+    padding: .25rem .75rem;
+    border-radius: .25rem;
+    align-items: center;
+    appearance: none;
+    border: none;
+}
+.btn-stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.btn-text {
+    flex: 1;
+}
+.btn-shortcut {
+    font-size: .5rem;
+}
+.btn--positive {
+    background-color: #0f0;
+}
+
+.btn--negative {
+    background-color: #f00;
+}

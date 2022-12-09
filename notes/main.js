@@ -26,11 +26,14 @@ const handlers = {
         }
     },
     newExplorerDirectory(event, path) {
-        if (fs.existsSync(resolve(path) + '/New Folder')) {
+        console.log('newExplorerDirectory', path);
+        if (fs.existsSync(resolve(path))) {
             console.error('Folder already exists');
+            return false;
         } else {
-            fs.mkdirSync(resolve(path) + '/New Folder');
+            fs.mkdirSync(resolve(path));
             console.log('Folder created');
+            return true;
         }
     },
     getExplorerDirectory() {
