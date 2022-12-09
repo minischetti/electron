@@ -4,8 +4,10 @@
 @import url('src/styles/components/labels.css');
 @import url('src/styles/components/inputs.css');
 
-body {
-    font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;800&display=swap');
+
+html, body {
+    font-family: 'Manrope', sans-serif;
     font-size: 16px;
     line-height: 1.6;
     margin: 0;

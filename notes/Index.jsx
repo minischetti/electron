@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CaretDown, CaretRight, FolderNotch, File, FolderNotchOpen, FolderNotchPlus, Check, X } from "phosphor-react";
+import { CaretDown, CaretRight, FolderNotch, File, FilePlus, FolderNotchOpen, FolderNotchPlus, Check, X } from "phosphor-react";
 
 const Tree = {
     Item: ({ children, file, content = [], handleCreateNewDirectory }) => {
@@ -72,23 +72,34 @@ const Tree = {
             <div className={`tree-item-container${open ? ' tree-item-container--open' : ""}`}>
                 <div className={`tree-item-header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
                     {file.isDirectory ?
-                        open ? <FolderNotchOpen /> : <FolderNotch />
-                        : <File />
+                        open ? <FolderNotchOpen size={20}/> : <FolderNotch size={20} />
+                        : <File size={20} />
                     }
                     <div className='tree-item-name'>{file.name}</div>
-                    <div className='toolbar toolbar--inline'>
+                    {/* <div className='toolbar toolbar--inline'>
                         <div className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
                             <FolderNotchPlus />
                         </div>
-                    </div>
+                    </div> */}
                     {file.isDirectory && content.length ?
                         <div className='number'>{content.length}</div>
                         : null}
                     {file.isDirectory && content.length ? (open ?
-                        <CaretDown className='tree-item-header-icon' />
-                        : <CaretRight className='tree-item-header-icon' />
+                        <CaretDown className='tree-item-header-icon' size={20} />
+                        : <CaretRight className='tree-item-header-icon' size={20} />
                     ) : ""}
                 </div>
+                {open ? 
+                    <div className='toolbar toolbar--inline'>
+                        <div className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
+                            <FolderNotchPlus size={18} className='btn--icon-icon' />
+                            <div class='btn--icon-label'>New Folder</div>
+                        </div>
+                        <div className="btn--icon disabled" onClick={(event) => showNewDirectoryForm(event)}>
+                            <FilePlus size={18} className='btn--icon-icon' />
+                            <div class='btn--icon-label'>New Doc</div>
+                        </div>
+                    </div> : null}
                 {shouldShowNewDirectoryForm && open ?
                     <div>
                         <NewDirectoryForm parent_path={file.path} />
@@ -149,11 +160,6 @@ export function Index() {
         <div id="app" className='container'>
             <div className='content'>
                 <div className='section responsive section--tree'>
-                    {/* <div className='header'>
-                        <div className='toolbar'>
-                            <button onClick={selectFile}>Open File</button>
-                        </div>
-                    </div> */}
                     {currentDirectory ? <div>{currentDirectory}</div> : null}
                     <div className='divider--h'></div>
                     <div className='tree'>
