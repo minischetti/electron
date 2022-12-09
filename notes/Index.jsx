@@ -70,7 +70,7 @@ const Tree = {
 
         return (
             <div className={`tree-item-container${open ? ' tree-item-container--open' : ""}`}>
-                <div className={`tree-item-header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
+                <div tabIndex={0} className={`tree-item-header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
                     {file.isDirectory ?
                         open ? <FolderNotchOpen size={20} /> : <FolderNotch size={20} />
                         : <File size={20} />

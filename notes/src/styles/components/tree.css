@@ -14,7 +14,7 @@
     outline: #aaa solid .1rem;
     border-radius: .25rem;
     padding-bottom: .5rem;
-    background-color: #ddd;
+    background-color: #fff;
 }
 
 .tree-item-header {
@@ -23,10 +23,10 @@
     gap: .5rem;
     align-items: center;
     user-select: none;
-    border-radius: .25rem;
+    border-radius: .25rem;  
 }
 .tree-item-container:not(.tree-item-container--open) .tree-item-header:hover {
-    background-color: #ccc;
+    background-color: #ddd;
 }
 /* .tree-item-header:hover {
     background-color: #ccc;
