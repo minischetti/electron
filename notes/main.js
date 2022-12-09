@@ -44,27 +44,26 @@ const handlers = {
         const root = resolve(__dirname, 'sandbox');
         const files = fs.readdirSync(root);
         const updateFile = (file) => {
-            let new_file = {};
             const stats = fs.statSync(file);
-            new_file = {
+            return {
                 name: path.basename(file),
-                path: resolve(path.dirname(file), path.basename(file)),    
+                path: resolve(path.dirname(file), path.basename(file)),
                 isFile: stats.isFile(),
                 isDirectory: stats.isDirectory(),
+                children: (() => {
+                    if (stats.isDirectory()) {
+                        return fs.readdirSync(file)
+                            .map((child) => {
+                                const child_path = join(file, child);
+                                return updateFile(child_path);
+                            })
+                    } else {
+                        return [];
+                    }
+                })(),
             }
-            if (stats.isDirectory()) {
-                new_file.children = fs.readdirSync(file)
-                    .map((child) => {
-                        const child_path = join(file, child);
-                        return updateFile(child_path);
-                    })
-            }
-            return new_file;
         }
         return files
-            // .map((file, index) => {
-            //     return files[index] = join(root, file);
-            // })
             .map((file) => {
                 const file_path = join(root, file);
                 const new_file = updateFile(file_path);
