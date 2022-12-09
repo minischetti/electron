@@ -50,6 +50,32 @@ const handlers = {
                 path: resolve(path.dirname(file), path.basename(file)),
                 isFile: stats.isFile(),
                 isDirectory: stats.isDirectory(),
+                stats: (() => {
+                    if (stats.isDirectory()) {
+                        const contents = fs.readdirSync(file)
+                        return contents.map((child) => {
+                            const child_path = join(file, child);
+                            const child_stats = fs.statSync(child_path)
+                            let count_files = 0;
+                            let count_directories = 0;
+                            if (child_stats.isFile()) {
+                                count_files++;
+                            }
+                            if (child_stats.isDirectory()) {
+                                count_directories++;
+                            }
+                            return {
+                                files: count_files,
+                                directories: count_directories,
+                            }
+                        })
+                    } else {
+                        return {
+                            files: 0,
+                            directories: 0,
+                        }
+                    }
+                })(),
                 children: (() => {
                     if (stats.isDirectory()) {
                         return fs.readdirSync(file)

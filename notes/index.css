@@ -3,14 +3,19 @@
 @import url('src/styles/components/toolbar.css');
 @import url('src/styles/components/labels.css');
 @import url('src/styles/components/inputs.css');
+@import url('src/styles/components/reset.css');
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;800&display=swap');
 
 html, body {
     font-family: 'Manrope', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.6;
     margin: 0;
+}
+
+body {
+    overflow: hidden;
 }
 
 #app {
@@ -53,11 +58,12 @@ html, body {
 }
 
 .responsive {
-    width: max-content;
-    min-width: fit-content;
-    height: 100vh;
-    resize: horizontal;
-    overflow: hidden;
+    /* width: max-content; */
+    /* min-width: fit-content; */
+    min-height: 100vh;
+    max-height: 100vh;
+    /* resize: horizontal; */
+    overflow: scroll;
 }
 
 .number {

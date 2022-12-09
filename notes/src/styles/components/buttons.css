@@ -31,6 +31,11 @@
     align-items: center;
     appearance: none;
     border: none;
+    background-color:hsl(0, 0%, 50%);
+}
+.btn:focus {
+    outline: 2px solid hsla(206, 100%, 100%, 50%);
+    box-shadow:hsl(0, 0%, 50%) 0 0 10px;
 }
 .btn-stack {
     display: flex;
@@ -45,9 +50,9 @@
     font-size: .5rem;
 }
 .btn--positive {
-    background-color: #0f0;
+    background-color: hsl(140, 75%, 50%);
 }
 
 .btn--negative {
-    background-color: #f00;
+    background-color: hsl(0, 0%, 50%);
 }

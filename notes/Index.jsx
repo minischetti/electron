@@ -72,7 +72,7 @@ const Tree = {
             <div className={`tree-item-container${open ? ' tree-item-container--open' : ""}`}>
                 <div className={`tree-item-header${content.length ? ' has-children' : ''}`} onClick={content.length ? () => setOpen(!open) : null}>
                     {file.isDirectory ?
-                        open ? <FolderNotchOpen size={20}/> : <FolderNotch size={20} />
+                        open ? <FolderNotchOpen size={20} /> : <FolderNotch size={20} />
                         : <File size={20} />
                     }
                     <div className='tree-item-name'>{file.name}</div>
@@ -89,15 +89,21 @@ const Tree = {
                         : <CaretRight className='tree-item-header-icon' size={20} />
                     ) : ""}
                 </div>
-                {open ? 
-                    <div className='toolbar toolbar--inline'>
-                        <div className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
-                            <FolderNotchPlus size={18} className='btn--icon-icon' />
-                            <div class='btn--icon-label'>New Folder</div>
+                {open ?
+                    <div>
+                        <div className="toolbar toolbar--inline">
+                            <div>{file.stats?.files}</div>
+                            <div>{file.stats?.directories}</div>
                         </div>
-                        <div className="btn--icon disabled" onClick={(event) => showNewDirectoryForm(event)}>
-                            <FilePlus size={18} className='btn--icon-icon' />
-                            <div class='btn--icon-label'>New Doc</div>
+                        <div className='toolbar toolbar--inline'>
+                            <div tabIndex={0} className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
+                                <FolderNotchPlus size={18} className='btn--icon-icon' />
+                                <div class='btn--icon-label'>New Folder</div>
+                            </div>
+                            <div tabIndex={0} className="btn--icon disabled" disabled>
+                                <FilePlus size={18} className='btn--icon-icon' />
+                                <div class='btn--icon-label'>New Doc</div>
+                            </div>
                         </div>
                     </div> : null}
                 {shouldShowNewDirectoryForm && open ?
