@@ -61,6 +61,7 @@ export function Index() {
     }
     const newExplorerDirectory = (event, path) => {
         event.preventDefault();
+        event.stopPropagation();
         return window.api.explorer.directory.new(path).then((results) => {
             console.log(results);
         });
@@ -75,6 +76,8 @@ export function Index() {
     const [fileContent, setFileContent] = useState("");
     const [explorerTree, setExplorerTree] = useState([]);
     const [currentDirectory, setCurrentDirectory] = useState("");
+    const [showNewDirectoryForm, setShowNewDirectoryForm] = useState(false);
+    const [newDirectoryName, setNewDirectoryName] = useState("");
     return (
         <div id="app" className='container'>
             <div className='content'>
