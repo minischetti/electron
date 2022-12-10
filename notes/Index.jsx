@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CaretDown, CaretRight, FolderNotch, File, FilePlus, FolderNotchOpen, FolderNotchPlus, Check, X } from "phosphor-react";
+import { CaretDown, CaretRight, FolderNotch, File, FilePlus, FolderNotchOpen, FolderNotchPlus, FolderNotch, Check, X, Hash } from "phosphor-react";
 
 const Tree = {
     Item: ({ children, file, content = [], handleCreateNewDirectory }) => {
@@ -91,19 +91,35 @@ const Tree = {
                 </div>
                 {open ?
                     <div>
-                        <div className="toolbar toolbar--inline">
-                            <div>{file.stats?.files}</div>
-                            <div>{file.stats?.directories}</div>
+                        <div className="toolbar toolbar--shelf">
+                            <div>Stats</div>
+                            {/* <div className='divider--h' /> */}
+                            {/* <div className='toolbar--shelf-content'> */}
+                            <div className='counter--icon'>
+                                <div>{file.stats?.files ?? "?"}</div>
+                                <File size={18} />
+                                <div>Files</div>
+                            </div>
+                            <div className='counter--icon'>
+                                <div>{file.stats?.directories ?? "?"}</div>
+                                <FolderNotch size={18} className='btn--icon-icon' />
+                                <div>Folders</div>
+                            </div>
+                            {/* </div> */}
                         </div>
-                        <div className='toolbar toolbar--inline'>
+                        <div className='toolbar toolbar--shelf'>
+                            <div>Actions</div>
+                            {/* <div className='divider--h' /> */}
+                            {/* <div className='toolbar--shelf-content'> */}
                             <div tabIndex={0} className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
                                 <FolderNotchPlus size={18} className='btn--icon-icon' />
-                                <div class='btn--icon-label'>New Folder</div>
+                                <div className='btn--icon-label'>New Folder</div>
                             </div>
                             <div tabIndex={0} className="btn--icon disabled" disabled>
                                 <FilePlus size={18} className='btn--icon-icon' />
-                                <div class='btn--icon-label'>New Doc</div>
+                                <div className='btn--icon-label'>New Doc</div>
                             </div>
+                            {/* </div> */}
                         </div>
                     </div> : null}
                 {shouldShowNewDirectoryForm && open ?
@@ -112,6 +128,7 @@ const Tree = {
                     </div>
                     : null}
                 <div className={`tree-item-children${open ? " open" : ""}`}>
+                    {/* <div>Items</div> */}
                     {content?.map((child, index) => {
                         return (
                             <Tree.Item key={index} file={child} content={child.children} />
