@@ -119,7 +119,7 @@ const Tree = {
                         </div>
                         <div className='toolbar toolbar--shelf'>
                             <div>Actions</div>
-                            <Tabs.List tabs={tabs} />
+                            <Tabs.Manager tabs={tabs} />
                         </div>
                     </div> : null}
                 <div className={`tree-item-children${open ? " open" : ""}`}>
@@ -186,7 +186,7 @@ export function Index() {
                                 return (
                                     <Tree.Item key={index} file={file} index={index} />
                                 )
-                            } else if (file.isDirectory && file.children) {
+                            } else if (file.isDirectory) {
                                 return (
                                     <div>
                                         <Tree.Item key={index} file={file} index={index} content={file.children} handleCreateNewDirectory={handleCreateNewDirectory} />

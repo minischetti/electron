@@ -27,6 +27,10 @@ body {
     font-size: 1rem;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 .container {
     display: flex;
     flex-direction: column;
