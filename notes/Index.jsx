@@ -1,17 +1,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { CaretDown, CaretRight, FolderNotch, File, FilePlus, FolderNotchOpen, FolderNotchPlus, FolderNotch, Check, X, Hash } from "phosphor-react";
+import Tabs from './src/templates/components/Tabs';
 
 const Tree = {
     Item: ({ children, file, content = [], handleCreateNewDirectory }) => {
         const [open, setOpen] = useState(false);
-        const [shouldShowNewDirectoryForm, setShouldShowNewDirectoryForm] = useState(false);
-        const showNewDirectoryForm = (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            setShouldShowNewDirectoryForm(true);
-            setOpen(true);
-        }
 
         const NewDirectoryForm = ({ parent_path }) => {
             const handleClick = (event) => {
@@ -45,6 +39,7 @@ const Tree = {
                 handleCreateNewDirectory(new_path);
                 setShouldShowNewDirectoryForm(false);
             }
+
             return (
                 <div>
                     <form className='input-container' onSubmit={handleSubmit}>
@@ -67,6 +62,24 @@ const Tree = {
                 </div>
             )
         }
+
+
+        const tabs = [
+            {
+                label: "New Folder",
+                icon: <FolderNotchPlus size={18} className='btn--icon-icon' />,
+                content: (
+                    <NewDirectoryForm parent_path={file.path} />
+                )
+            },
+            {
+                label: "New File",
+                icon: <FilePlus size={18} className='btn--icon-icon' />,
+                content: (
+                    <div>Coming soon!</div>
+                )
+            }
+        ]
 
         return (
             <div className={`tree-item-container${open ? ' tree-item-container--open' : ""}`}>
@@ -93,8 +106,6 @@ const Tree = {
                     <div>
                         <div className="toolbar toolbar--shelf">
                             <div>Stats</div>
-                            {/* <div className='divider--h' /> */}
-                            {/* <div className='toolbar--shelf-content'> */}
                             <div className='counter--icon'>
                                 <div>{file.stats?.files ?? "?"}</div>
                                 <File size={18} />
@@ -105,28 +116,12 @@ const Tree = {
                                 <FolderNotch size={18} className='btn--icon-icon' />
                                 <div>Folders</div>
                             </div>
-                            {/* </div> */}
                         </div>
                         <div className='toolbar toolbar--shelf'>
                             <div>Actions</div>
-                            {/* <div className='divider--h' /> */}
-                            {/* <div className='toolbar--shelf-content'> */}
-                            <div tabIndex={0} className="btn--icon" onClick={(event) => showNewDirectoryForm(event)}>
-                                <FolderNotchPlus size={18} className='btn--icon-icon' />
-                                <div className='btn--icon-label'>New Folder</div>
-                            </div>
-                            <div tabIndex={0} className="btn--icon disabled" disabled>
-                                <FilePlus size={18} className='btn--icon-icon' />
-                                <div className='btn--icon-label'>New Doc</div>
-                            </div>
-                            {/* </div> */}
+                            <Tabs.List tabs={tabs} />
                         </div>
                     </div> : null}
-                {shouldShowNewDirectoryForm && open ?
-                    <div>
-                        <NewDirectoryForm parent_path={file.path} />
-                    </div>
-                    : null}
                 <div className={`tree-item-children${open ? " open" : ""}`}>
                     {/* <div>Items</div> */}
                     {content?.map((child, index) => {
