@@ -6,6 +6,7 @@
 @import url('src/styles/components/reset.css');
 @import url('src/styles/components/tabs.css');
 @import url('src/styles/variables.css');
+@import url('src/styles/components/panes.css');
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;800&display=swap');
 
@@ -59,6 +60,10 @@ body {
 .section {
     padding: 1rem;
     background-color: #eee;
+}
+
+.sidebar {
+    min-width: fit-content;
 }
 
 .responsive--v {

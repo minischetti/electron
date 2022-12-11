@@ -1,8 +1,13 @@
-import styles from '../../styles/components/panes.css';
 import React from 'react';
 
 const Manager = ({ children }) => (
-    <div className={styles.panes}>
+    <div className='panes'>
+        {children}
+    </div>
+);
+
+export const Pane = ({ children }) => (
+    <div className='pane'>
         {children}
     </div>
 );

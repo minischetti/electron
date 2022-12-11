@@ -17,13 +17,29 @@ const handlers = {
             }
         }
     },
-    openFile(path) {
-        const fileContent = fs.readFileSync(path, 'utf-8');
-        if (fileContent) {
-            return { path, fileContent }
-        } else {
-            console.log('Error: fileContent is undefined');
+    openFile(event, path) {
+        const resolvedPath = resolve(path);
+        const stats = fs.statSync(resolvedPath);
+        if (stats.isFile()) {
+            return fs.readFileSync(resolvedPath, 'utf-8', (err, data) => {
+                if (err) {
+                    console.error(err);
+                    return false;
+                } else {
+                    return data;
+                }
+            });
+        } else if (stats.isDirectory()) {
+            return fs.readdirSync(resolvedPath, (err, data) => {
+                if (err) {
+                    console.error(err);
+                    return false;
+                } else {
+                    return data;
+                }
+            });
         }
+        return false;
     },
     newExplorerDirectory(event, path) {
         console.log('newExplorerDirectory', path);
@@ -125,7 +141,7 @@ const createWindow = async () => {
 
 app.whenReady().then(() => {
     // Add listeners for each preload event
-    ipcMain.handle('dialog:openFile', handlers.openFile)
+    ipcMain.handle('explorer:item::open', handlers.openFile)
     ipcMain.handle('dialog:selectFile', handlers.selectFile)
     ipcMain.handle('explorer:tree::get', handlers.getExplorerTree)
     ipcMain.handle('explorer:tree:directory::get', handlers.getExplorerDirectory)

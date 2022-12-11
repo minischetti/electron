@@ -1,19 +1,31 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FolderNotch, Check, X, Hash } from "phosphor-react";
-import Panes from './src/templates/views/Panes';
+import Panes, { Pane } from './src/templates/views/Panes';
 import { Tree } from './src/templates/components/Tree';
+import commonmark from 'commonmark';
 
 export function Index() {
-    const selectFile = async () => {
-        const results = await window.api.selectFile();
-        if (results.filePath) {
-            setFilePath(results.filePath)
-        }
-        if (results.fileContent) {
-            setFileContent(results.fileContent)
-        }
+    const [filePath, setFilePath] = useState("");
+    const [fileContent, setFileContent] = useState("");
+    const [explorerTree, setExplorerTree] = useState([]);
+    const [currentDirectory, setCurrentDirectory] = useState("");
+    const [panes, setPanes] = useState([]);
+    const [activePane, setActivePane] = useState(0);
+
+    const addPane = (file) => {
+        return window.api.explorer.item.open(file.path).then((result) => {
+            const newPanes = [...panes];
+            newPanes.push({
+                path: file.path,
+                content: <div>{result}</div>
+            });
+            console.log(newPanes);
+            setPanes(newPanes);
+            setActivePane(newPanes.length - 1);
+        });
     }
+
     const getExplorerTree = () => {
         return window.api.explorer.tree.get().then((results) => {
             console.log(results);
@@ -38,21 +50,17 @@ export function Index() {
 
         window.api.explorer.tree.onUpdateListener(getExplorerTree);
     }, []);
-    const [filePath, setFilePath] = useState("");
-    const [fileContent, setFileContent] = useState("");
-    const [explorerTree, setExplorerTree] = useState([]);
-    const [currentDirectory, setCurrentDirectory] = useState("");
     return (
         <div id="app" className='container'>
             <div className='content'>
-                <div className='section responsive--v responsive--h'>
+                <div className='sidebar section responsive--v responsive--h'>
                     {currentDirectory ? <div>{currentDirectory}</div> : null}
                     <div className='divider--h'></div>
                     <div className='tree'>
                         {explorerTree?.map((file, index) => {
                             if (file.isFile || (file.isDirectory && !file.children)) {
                                 return (
-                                    <Tree.Item key={index} file={file} index={index} />
+                                    <Tree.Item key={index} file={file} index={index} handleOpenFileListener={() => addPane(file)} />
                                 )
                             } else if (file.isDirectory) {
                                 return (
@@ -65,14 +73,15 @@ export function Index() {
                     </div>
                 </div>
                 <Panes>
-
+                    {panes.map((pane, index) => {
+                        return (
+                            <Pane key={index}>
+                                <div>{pane?.path}</div>
+                                <div>{pane?.content}</div>
+                            </Pane>
+                        )
+                    })}
                 </Panes>
-                <div className='section'>
-                    <div id="editor">
-                        <div>{filePath}</div>
-                        <div>{fileContent}</div>
-                    </div>
-                </div>
             </div>
         </div>
     )
