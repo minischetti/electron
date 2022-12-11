@@ -5,7 +5,7 @@ export default Tabs = {
     List: ({ tabs }) => {
         const [activeTab, setActiveTab] = useState(-1)
         // close all tabs
-        const closeAllTabs = () => {
+        const closeTab = () => {
             setActiveTab(-1)
         }
 
@@ -27,15 +27,12 @@ export default Tabs = {
                         {tabs.map((tab, index) => {
                             return (
                                 <div key={index} className={`tab${activeTab === index ? " active" : ""}`} onClick={() => setActiveTab(index)}>
+                                    {tab.icon}
                                     {tab.label}
+                                    {activeTab === index ? <X /> : null}
                                 </div>
                             )
                         })}
-                    </div>
-                    <div className="tab-actions">
-                        <div onClick={closeAllTabs}>
-                            {activeTab !== -1 ? <X /> : null}
-                        </div>
                     </div>
                 </div>
                 <Content />

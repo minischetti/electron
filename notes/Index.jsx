@@ -177,7 +177,7 @@ export function Index() {
     return (
         <div id="app" className='container'>
             <div className='content'>
-                <div className='section responsive section--tree'>
+                <div className='section responsive--v responsive--h'>
                     {currentDirectory ? <div>{currentDirectory}</div> : null}
                     <div className='divider--h'></div>
                     <div className='tree'>

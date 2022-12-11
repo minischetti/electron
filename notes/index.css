@@ -5,10 +5,12 @@
 @import url('src/styles/components/inputs.css');
 @import url('src/styles/components/reset.css');
 @import url('src/styles/components/tabs.css');
+@import url('src/styles/variables.css');
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;800&display=swap');
 
-html, body {
+html,
+body {
     font-family: 'Manrope', sans-serif;
     font-size: 14px;
     line-height: 1.6;
@@ -52,19 +54,17 @@ body {
 
 .section {
     padding: 1rem;
-}
-
-.section--tree {
     background-color: #eee;
 }
 
-.responsive {
-    /* width: max-content; */
-    /* min-width: fit-content; */
+.responsive--v {
     min-height: 100vh;
     max-height: 100vh;
-    /* resize: horizontal; */
     overflow: scroll;
+}
+
+.responsive--h {
+    resize: horizontal;
 }
 
 .number {
