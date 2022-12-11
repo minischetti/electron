@@ -51,10 +51,10 @@ body {
 }
 
 .divider--h {
-    width: 100%;
+    width: 90%;
     height: 1px;
-    background-color: #ccc;
-    margin: 1rem 0;
+    background-color: #ddd;
+    margin: 1rem auto;
 }
 
 .section {

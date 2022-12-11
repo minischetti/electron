@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FolderNotch, Check, X, Hash } from "phosphor-react";
+import { FolderNotch, Check, X, Hash, ArrowDown } from "phosphor-react";
 import Panes, { Pane } from './src/templates/views/Panes';
 import { Tree } from './src/templates/components/Tree';
 import commonmark from 'commonmark';
@@ -17,14 +17,23 @@ export function Index() {
         return window.api.explorer.item.open(file.path).then((result) => {
             const newPanes = [...panes];
             newPanes.push({
+                name: file.name,
                 path: file.path,
                 content: <div>{result}</div>
             });
             console.log(newPanes);
             setPanes(newPanes);
-            setActivePane(newPanes.length - 1);
+            // setActivePane(newPanes.length - 1);
         });
     }
+
+    closePane = (index) => {
+        const newPanes = [...panes];
+        newPanes.splice(index, 1);
+        setPanes(newPanes);
+        // setActivePane(newPanes.length - 1);
+    }
+
 
     const getExplorerTree = () => {
         return window.api.explorer.tree.get().then((results) => {
@@ -76,8 +85,19 @@ export function Index() {
                     {panes.map((pane, index) => {
                         return (
                             <Pane key={index}>
-                                <div>{pane?.path}</div>
-                                <div>{pane?.content}</div>
+                                <div className="pane-header">
+                                    <div className="pane-name">{pane?.name}</div>
+                                    <div className='pane-icon--minimize disabled'>
+                                        <ArrowDown />
+                                    </div>
+                                    <div className='pane-icon--close' onClick={() => closePane(index)}>
+                                        <X />
+                                    </div>
+                                </div>
+                                <div className="divider--h"></div>
+                                <div className="pane-content">
+                                    <div>{pane?.content}</div>
+                                </div>
                             </Pane>
                         )
                     })}
