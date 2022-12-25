@@ -4,6 +4,7 @@ import { FolderNotch, Check, X, Hash, ArrowDown } from "phosphor-react";
 import Panes, { Pane } from './src/templates/views/Panes';
 import { Tree } from './src/templates/components/Tree';
 import commonmark from 'commonmark';
+import { Calendar } from './src/templates/components/Calendar';
 
 export function Index() {
     const [filePath, setFilePath] = useState("");
@@ -102,6 +103,7 @@ export function Index() {
                         )
                     })}
                 </Panes>
+                <Calendar />
             </div>
         </div>
     )
