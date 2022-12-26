@@ -103,7 +103,7 @@ export function Index() {
                         )
                     })}
                 </Panes>
-                <Calendar />
+                <Calendar files={explorerTree} />
             </div>
         </div>
     )

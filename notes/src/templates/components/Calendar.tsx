@@ -1,11 +1,37 @@
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export const Calendar = () => {
+export const Calendar = ({ files }) => {
     const [date, setDate] = useState(dayjs());
     const [options, setOptions] = useState({
         dayNameStyle: [['short', 'dd'], ['medium', 'ddd'], ['long', 'dddd']],
     });
+    const generateDays = () => {
+        return Array.from({ length: date.daysInMonth() }, (_, i) => {
+            const day = date.startOf('month').add(i, 'day');
+            console.log(day);
+            return (
+            <div key={i}>
+                <div className="calendar__day   calendar__item">{i + 1}</div>
+                <div className="calendar__notes">
+                    {files.map((file) => {
+                        // console.log(dayjs(file.stats.birthtime).isSame(_, 'day'));
+                         
+                        if (dayjs(file.stats.birthtime).isSame(day, 'day')) {
+                            return (
+                                <div key={file.id} className="calendar__note">
+                                    {file.name}
+                                </div>
+                            );
+                        }
+                    })}
+                </div>
+            </div>
+            )
+        });
+    };
+    const [days, setDays] = useState([]);
+
 
     const handlePrev = () => {
         setDate(date.subtract(1, 'month').startOf('month'));
@@ -23,6 +49,9 @@ export const Calendar = () => {
         return date.isSame(dayjs(), 'day');
     };
 
+    useEffect(() => {
+        setDays(generateDays);
+    }, [date]);
 
     return (
         <div>
@@ -42,9 +71,7 @@ export const Calendar = () => {
                     ))}
                 </div>
                 <div className="calendar__days">
-                    {Array.from({ length: date.daysInMonth() }, (_, i) => (
-                        <div key={i} className="calendar__day calendar__item">{i + 1}</div>
-                    ))}
+                    {days}
                 </div>
             </div>
         </div>
