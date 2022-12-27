@@ -63,6 +63,19 @@
     /* background-color: #eee; */
 }
 
-.has-items {
-    background-color: blue;
+.calendar__side-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #fff;
+    outline: 1px solid #ddd;
+}
+
+.has-items--added {
+    background-color: green;
+}
+
+.has-items--modified {
+    background-color: yellow;
 }

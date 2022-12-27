@@ -11,14 +11,16 @@ export const Calendar = ({ files }) => {
         return Array.from({ length: date.daysInMonth() }, (_, i) => {
             const day = date.startOf('month').add(i, 'day');
             const filesWithSameBirthTime = files.filter(file => dayjs(file.stats.birthtime).isSame(day, 'day')).length;
-            const filesWithSameModifiedTime = files.filter(file => dayjs(file.stats.mtime).isSame(day, 'day')).length;
+            const filesWithSameModifiedTime = files.filter(file => {
+                return dayjs(file.stats.mtime).isSame(day, 'day') && !dayjs(file.stats.birthtime).isSame(day, 'day');
+            }).length;
 
             console.log(day);
             return (
                 <div key={i} onClick={() => {
                     setDate(day);
                 }}>
-                    <div className={`calendar__day calendar__item${filesWithSameModifiedTime ? " has-items" : ""}`}>{i + 1}</div>
+                    <div className={`calendar__day calendar__item${filesWithSameBirthTime ? " has-items--added" : ""}${filesWithSameModifiedTime ? " has-items--modified" : ""}`}>{i + 1}</div>
                     {/* {filesWithSameModifiedTime ? <div className="calendar__day-items">
                         <div className="calendar__day-item">
                             <div>
@@ -60,6 +62,11 @@ export const Calendar = ({ files }) => {
         setDays(generateDays(files));
     }, [date, files]);
 
+    const filesModifiedToday = files.filter(file => {
+        return dayjs(file.stats.mtime).isSame(date, 'day') && !dayjs(file.stats.birthtime).isSame(date, 'day');
+    }).length;
+    const filesAddedToday = files.filter(file => dayjs(file.stats.birthtime).isSame(date, 'day')).length;
+
     return (
         <div className="calendar">
             <div className="calendar__main">
@@ -87,32 +94,19 @@ export const Calendar = ({ files }) => {
             </div>
             <div className="calendar__side">
                 <div className="calendar__side-items">
-                    {files.map((file) => {
-                        if (dayjs(file.stats.birthtime).isSame(date, 'day')) {
-                            return (
-                                <div key={file.id} className="calendar__side-item">
-                                    <div className="calendar__side-item-icon">
-                                        <Plus />
-                                        <div className="calendar__side-item-icon-text">
-                                            {file.name}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }
-                        if (dayjs(file.stats.mtime).isSame(date, 'day')) {
-                            return (
-                                <div key={file.id} className="calendar__side-item">
-                                    <div className="calendar__side-item-icon">
-                                        <PlusMinus />
-                                        <div className="calendar__side-item-icon-text">
-                                            {file.name}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }
-                    })}
+                    {/* Added section */}
+                    {filesAddedToday ?
+                        <div className="calendar__side-item">
+                            <div>Added</div>
+                            <div>{filesAddedToday}</div>
+                        </div>
+                    : null}
+                    {filesModifiedToday ?
+                        <div className="calendar__side-item">
+                            <div>Modified</div>
+                            <div>{filesModifiedToday}</div>
+                        </div>
+                    : null}
                 </div>
 
             </div>
