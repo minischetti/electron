@@ -26,6 +26,13 @@
 .calendar__body {
 }
 
+.calendar__day-item-inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .calendar__days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -54,4 +61,8 @@
 
 .calendar__day--today {
     /* background-color: #eee; */
+}
+
+.has-items {
+    background-color: blue;
 }
