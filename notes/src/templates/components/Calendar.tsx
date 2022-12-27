@@ -20,7 +20,9 @@ export const Calendar = ({ files }) => {
                 <div key={i} onClick={() => {
                     setDate(day);
                 }}>
-                    <div className={`calendar__day calendar__item${filesWithSameBirthTime ? " has-items--added" : ""}${filesWithSameModifiedTime ? " has-items--modified" : ""}`}>{i + 1}</div>
+                    <div className={`calendar__day calendar__item${filesWithSameBirthTime ? " has-items--added" : ""}${filesWithSameModifiedTime ? " has-items--modified" : ""}`}>
+                        <div className="calendar__day-number">{day.format('D')}</div>
+                    </div>
                     {/* {filesWithSameModifiedTime ? <div className="calendar__day-items">
                         <div className="calendar__day-item">
                             <div>
@@ -81,11 +83,11 @@ export const Calendar = ({ files }) => {
                 </div>
                 <div className="calendar__body">
                     <div className="calendar__weekdays">
-                        {Array.from({ length: 7 }, (_, i) => (
+                        {/* {Array.from({ length: 7 }, (_, i) => (
                             <div key={i} className="calendar__weekday calendar__item">
                                 {date.day(i).format('dd')}
                             </div>
-                        ))}
+                        ))} */}
                     </div>
                     <div className="calendar__days">
                         {days}
